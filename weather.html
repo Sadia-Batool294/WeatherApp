@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="weather.css">
+</head>
+<body>
+   <div class="card">
+    <div class="search">
+        <input type="text" id="city-input" placeholder="Enter city name" spellcheck="false">
+        <button onclick="checkWeather()"><img src="images/search.png"></button>     
+    </div>  
+    <div class="weather">
+        <img src="images/rain.png" class="weather-icons">
+        <h1 class="temp">22°C</h1>
+        <h2 class="city">Multan</h2>
+        <div class="details">
+            <div class="col">
+                <img src="images/humidity.png">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div class="col">
+                <img src="images/wind.png">
+                <div>
+                    <p class="wind">50 km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>   
+   </div>
+
+<script>
+    const apiKey = "940629ebca68cbf1bf0cc836b89ff473";
+    
+    async function checkWeather() {
+        const city = document.getElementById("city-input").value;
+        const apiurl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        try {
+            const response = await fetch(apiurl);
+            if (!response.ok) {
+                throw new Error("City not found");
+            }
+            const data = await response.json();
+            console.log(data);
+
+            // Update the DOM with fetched weather data
+            document.querySelector('.temp').innerText = `${data.main.temp}°C`;
+            document.querySelector('.city').innerText = data.name;
+            document.querySelector('.humidity').innerText = `${data.main.humidity}%`;
+            document.querySelector('.wind').innerText = `${data.wind.speed} km/h`;
+            document.querySelector('.weather-icons').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+        } catch (error) {
+            console.error(error);
+            alert('City not found or API error');
+        }
+    }
+</script>
+
+</body>
+</html>
